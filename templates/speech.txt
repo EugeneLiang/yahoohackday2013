@@ -1,0 +1,21 @@
+
+
+we are [team name]
+The problem we want to solve is usage of Open Data ( iCulture or Taipei Government )
+We want more people to use Open Data.
+we think that Open Data provided by iCulture and Govt is great, and it's a pity that there isn't much usage.
+
+
+our hack is Open Data meets YQL
+
+
+
+
+I feel that the main reasons for limited usage is due to the lack of tools
+for people to browse or use the API.
+
+
+END:
+using this hack, we hope that people can write code correctly and more people will use Open Data.
+
+thanks.

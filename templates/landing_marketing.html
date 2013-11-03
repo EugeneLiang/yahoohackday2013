@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A layout example that shows off a responsive product landing page.">
+    <title>Open Data on YQL</title>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<link rel="stylesheet" href="/static/css/marketing.css">
+<style>
+.splash, .content-ribbon {
+    height:800px;
+}
+
+.content-subhead {
+    font-size:30px;
+    color:#000000;
+}
+</style>
+<script src="http://use.typekit.net/gis6vng.js"></script>
+<script>
+    try { Typekit.load(); } catch (e) {}
+</script>
+
+</head>
+<body>
+<div class="content">
+    <div class="header">
+        <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal">
+            <!-- if user logs in, direct to console -->
+            {% if user %}
+            <a class="pure-menu-heading" href="/console3">Open Data on YQL</a>
+            {% else %}
+            <a class="pure-menu-heading" href="/">Open Data on YQL</a>
+            {% end %}
+            <ul style="float:right">
+                 <li><a id="about">About</a></li>
+                 <li><a id="why">Why</a></li>
+                 <li><a id="how">How</a></li>
+                 <li><a id="technology">Technology</a></li>
+                 <li><a id="benefits">Benefits</a></li>
+                 <li><a id="signup">Sign Up</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="about_content" class="splash">
+        <div class="pure-g-r">
+
+
+            <div class="pure-u-1" style="text-align:center">
+                <div class="l-box splash-text">
+                    <h1 class="splash-head" style="font-size:80px">
+                        Open Data meets YQL.
+                    </h1>
+
+                    <h2 class="splash-subhead" style="color:#444;font-size:40px">
+                        Browse and Query Open Data using YQL. <br/>
+                        No Programming Knowledge Needed.
+
+                    </h2>
+
+                    <p> </p>
+                    <h3>By Team 51:「程式這麼寫對不對？」</h3>
+                    <p>
+                        <a id="learnmore" href="#" class="pure-button primary-button">Learn More</a>
+                        <a href="/auth/login?next=/console3" class="pure-button primary-button">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="why_content" class="pure-g-r content-ribbon">
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h1 class="content-subhead" style="color:#444;font-size:44px">Why ?</h1>
+
+                    <h3>Great Data. But Limited Usage. Why ?</h3>
+                    <ul>
+                        <li>Not programmer friendly - no API browser</li>
+                        <li>Formatting of Data Not Consistent</li>
+                        <li>Programmer or not, will find this difficult to use</li>
+                    </ul>
+
+
+                    <h3>We Want To Change This.</h3>
+                </div>
+            </div>
+
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="/static/img/why_u_no.png"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+        </div>
+
+        <div id="how_content" class="pure-g-r content-ribbon">
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="/static/img/trex.png"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h1 class="content-subhead" style="color:#444;font-size:44px">How ?</h1>
+                    <h3>We leverage on YQL</h3>
+                    <p>
+                        We parsed iCulture and Government's data and made it YQL ready.
+                        Representative subsets of iCulture data and government data now runs on top of YQL.
+                    </p>
+
+                    <p>
+                        
+                    </p>
+
+                    <p>
+                        <b>Benefits</b>
+                        <ul>
+                            <li>API Browser for Programmers - via YQL Console</li>
+                            <li>Lowers cost of ownership - hosted via YQL service</li>
+                            <li>Consistent Formatting</li>
+                        </ul>
+
+                    </p>
+                    <h3>Much easier to use</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="technology_content" class="pure-g-r content-ribbon">
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h1 class="content-subhead" style="color:#444;font-size:44px">Technology</h1>
+
+                    <h3>Intelligent Assisted Query</h3>
+                    <p>
+                        Non-programmers with no knowledge of SQL or MySQL can quickly create YQL statementSmart algorithm that builds a YQL statement without any knowledge of SQL or YQL.
+                    </p>
+
+                    <b>Non programmers can</b>
+                     <ul>
+                        <li>Create YQL statements with ZERO programming knowledge</li>
+                        <li>Save Queries as Recipes</li>
+                        <li>Use Other</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="/static/img/interesting_man.png"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+        </div>
+
+
+        <div id="benefits_content" class="pure-g-r content-ribbon">
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="/static/img/success_kid.png"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h1 class="content-subhead" style="color:#444;font-size:44px">Benefits</h1>
+
+                    <h3>More usage, more output, simplified administration</h3>
+                    <p>
+                        Encourage Mashups, research, usage and simplified administration.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="signup_content" class="splash">
+            <div class="pure-g-r">
+                <div class="pure-u-1-3"></div>
+                <div class="pure-u-1-3">
+                    <div class="l-box splash-text" style="text-align: center; padding-top:50px;">
+                        <h1 class="splash-head">
+                            Are you ready ?
+                        </h1>
+
+                        <h2 class="splash-subhead">
+                            Query and build mashups.
+                        </h2>
+                        <!-- here will be all the key benefits -->
+                        <p>
+                            <a href="/auth/login?next=/console3" class="pure-button primary-button">Sign Up Now My Brother</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="pure-u-1-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright.
+    </div>
+</div>
+
+<script src="/static/js/jquery-1.9.1.min.js"></script>
+<script>
+    function scrollToAbout() {
+      $('html, body').animate({
+          scrollTop: $("#about_content").offset().top - 100
+      }, 1000);
+    }
+    function scrollToWhy() {
+      $('html, body').animate({
+          scrollTop: $("#why_content").offset().top - 100
+      }, 1000);
+    }
+    function scrollToHow() {
+      $('html, body').animate({
+          scrollTop: $("#how_content").offset().top - 100
+      }, 1000);
+    }
+    function scrollToTechnology() {
+      $('html, body').animate({
+          scrollTop: $("#technology_content").offset().top - 100
+      }, 1000);
+    }
+    function scrollToBenefits() {
+      $('html, body').animate({
+          scrollTop: $("#benefits_content").offset().top - 100
+      }, 1000);
+    }
+    function scrollToSignup() {
+      $('html, body').animate({
+          scrollTop: $("#signup_content").offset().top 
+      }, 1000);
+    }
+    $(document).ready(function() {
+      $("#about").click(scrollToAbout);
+      $("#why").click(scrollToWhy);
+      $("#how").click(scrollToHow);
+      $("#technology").click(scrollToTechnology);
+      $("#benefits").click(scrollToBenefits);
+      $("#signup").click(scrollToSignup);
+      $("#learnmore").click(scrollToWhy);
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A layout example that shows off a responsive product landing page.">
+    <title>Open Data on YQL</title>
+<link rel="stylesheet" href="/static/css/pure-min.css">
+<link rel="stylesheet" href="/static/css/marketing.css">
+<style>
+    #ac-input {
+      font-size: 24px;
+    } 
+
+    #recipe-title, #recipe-description {
+      font-size: 24px
+    }
+
+    .create-recipe-label {
+      font-size: 30px;
+      font-weight: 500;
+    }
+
+    #photos {
+      z-index:10000;
+      border: 1px solid #cfcfcf;
+      list-style: none;
+      margin: 1.5em 0 0;
+      padding: 6px;
+    }
+    #photos li {
+      display: inline-block;
+      list-style: none;
+      /* fake inline-block for IE<8 */
+      zoom: 1;
+      *display: inline;
+      z-index:10000;
+    }
+
+    #photos .empty { font-style: italic; }
+
+    #photos .photo {
+      margin: 5px;
+      text-align: center;
+      width: 100px;
+      z-index:10000;
+    }
+
+    #photos .photo img {
+      border: 1px solid #000;
+      vertical-align: top;
+      z-index:10000;
+    }
+
+    .result {
+      margin: 2px 0;
+      zoom: 1;
+      z-index:10000;
+    }
+
+    .result:after {
+      clear: both;
+      content: '.';
+      display: block;
+      height: 0;
+      visibility: hidden;
+      z-index:10000;
+    }
+
+    .result .photo {
+      height: 32px;
+      float: left;
+      margin-right: 6px;
+      width: 32px;
+      z-index:10000;
+    }
+
+    .result .title { vertical-align: top; z-index:10000; }
+
+    .social-data img {
+       height:20px;
+       width:20px;
+       vertical-align: middle;
+       z-index:10000;
+    }
+
+    .statistics {
+      font-size:10px;
+      z-index:10000;
+    }
+
+    .statistics:hover {
+      border:1px solid red;
+      z-index:10000;
+    }
+
+
+    /* overlay css */
+    /* Hide overlay markup while loading, if js is enabled */
+    .yui3-js-enabled .yui3-overlay-loading {
+        top: -1000em;
+        left: -1000em;
+        position: absolute;
+        z-index:10000;
+    }
+
+    .yui3-aclist, .yui3-aclist-item, .yui3-aclist-item-active, .yui3-aclist-list{
+        z-index:10000;
+        letter-spacing: 1px;
+    }
+    .yui3-aclist-item div {
+        z-index:10000;
+        letter-spacing: 1px;
+    }
+
+    .social-holder-attribute {
+      z-index: 10000;
+      width: 120%;
+      margin-left: -5px;
+      padding-left: 10px;
+      background-color: black;
+      color:white;
+      font-size:20px;
+      font-weight: bold;
+
+    }
+
+
+
+    .l-box {
+      margin-top: -40px;
+    }
+
+    .pure-menu-selected {
+      font-size: 16px;
+      margin-top: -10px;
+      margin-left: -30px;
+    }
+
+    .pure-button-xsmall {
+        font-size: 70%;
+    }
+
+    .pure-button-small {
+        font-size: 85%;
+    }
+
+    .pure-button-large {
+        font-size: 110%;
+    }
+
+    .pure-button-xlarge {
+        font-size: 125%;
+    }
+
+    .pure-button-super-xlarge {
+        font-size: 200%;
+    }
+
+
+    .pure-button-secondary {
+        color: white;
+        border-radius: 4px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .pure-button-success {
+        background: rgb(28, 184, 65); /* this is a green */
+    }
+
+    .pure-button-error {
+        background: rgb(202, 60, 60); /* this is a maroon */
+    }
+
+    .pure-button-warning {
+        background: rgb(223, 117, 20); /* this is an orange */
+    }
+
+    .pure-button-secondary {
+        background: rgb(66, 184, 221); /* this is a light blue */
+    }
+
+
+    .icon {
+      height:64px;
+      width:64px;
+      margin: 4px;
+    }
+
+    .spaced {
+      margin-left:80px;
+
+    }
+
+    .ui-autocomplete {
+      max-height: 150px;
+      overflow-y: auto;
+      /* prevent horizontal scrollbar */
+      overflow-x: hidden;
+      /* add padding to account for vertical scrollbar */
+      padding-right: 20px;
+    } 
+
+    .banner {
+      height:100px;
+      background-color: #FFF;
+      color:#444;
+      padding:40px 0 0 70px;
+      font-size: 60px;
+    }
+
+    #json-output {
+      font-size:12px;
+      font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+    }
+
+    #tableHolder {
+      overflow:scroll;
+      height:200px;
+      margin:4px;
+      padding:4px;
+      border: 3px solid #444;
+    }
+
+</style>
+  <link rel="stylesheet" href="/static/css/jquery-ui.min.css" />
+  <script src="/static/js/jquery-1.9.1.min.js"></script>
+  <script src="/static/js/jquery-ui.min.js"></script>
+  <script src="/static/js/jquery.expandable.js"></script>
+  <script src="/static/js/json-to-table.js"></script>
+  
+  <script>
+  $(function() {
+
+    function split( val ) {
+      return val.split( /\s\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#ac-input" )
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).data( "ui-autocomplete" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          var inp = $('#ac-input').val();
+          var encoded_inp = encodeURIComponent(inp);
+          $.getJSON( "/suggestions?query="+encoded_inp, {
+            term: extractLast( request.term )
+          }, response );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join(" ");
+          return false;
+        }
+      }).data( "ui-autocomplete" )._renderItem = function ( ul, item ) {
+        console.log("custom formatting");
+        console.log(ul);
+        console.log(item);
+        // here i need to check the type
+        var image = null;
+        if (item.type == "keyword") {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/yql_icon.png" />';
+        }
+        else if (item.type == "datasource") {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/datasource_icon.png" />';
+        }
+        else if (item.type == "field") {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/field.png" />';
+        }
+        else if (item.type == "logic") {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/logic.png" />';
+        }
+        else if (item.type == "condition") {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/conditions.png" />';
+        }
+        else {
+          image = '<img class="pure-u-1-12 icon" src="/static/img/yql_icon.png" />';
+        }
+
+
+        return $("<li>").append("<a>" + image +  "<div class=\"pure-u-11-12\"><b>"  + item.value + "</b><br><small>" + item.description + "</small></div></a>").appendTo(ul);
+      };
+    });
+
+
+    function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+
+    function postToYQL() {
+      var value = $("#ac-input").val();
+      console.log("postToYQL");
+      console.log(value);
+      var request = $.ajax({
+        url: "/yql",
+        type: "GET",
+        data: { query_string : value },
+        dataType: "json"
+      });
+       
+      request.done(function( request ) {
+        console.log("--->>> output request");
+        console.log(request);
+        // this will need to "loop through" the object in order to 
+        // show correctly
+        
+        //var output = JSON.parse(request);
+
+        //console.log(output);
+        // $("#json-ouput").val(request);
+        // var jsonHtmlTable = ConvertJsonToTable(request, 'jsonTable', null, null);
+        var jsonHtmlTable = ConvertJsonToTable(request, 'jsonTable', 'pure-table', null);
+        console.log("the json converted to table is ");
+        console.log(jsonHtmlTable);
+        $("#tableHolder").html(jsonHtmlTable);
+      });
+       
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+    }
+
+    function scrollToForm() {
+      $('html, body').animate({
+          scrollTop: $("#save-recipe").offset().top - 100
+      }, 1000);
+    }
+
+    function scrollToTop() {
+      $('html, body').animate({
+          scrollTop: $("#top").offset().top
+      }, 1000);
+    }
+
+    function saveRecipe() {
+      // so here i need to get the 
+      // technically i nee to disable the submit button
+      $("#recipe-response").html("Submitting.....");
+      var title = $("#recipe-title").val();
+      var description = $("#recipe-description").val();
+      var yql_statement = $("#ac-input").val(); // all must be filled
+      var _xsrf = getCookie("_xsrf");
+      var request = $.ajax({
+        url: "/recipe",
+        type: "POST",
+        data: { title : title, description : description, yql_statement : yql_statement, _xsrf : _xsrf },
+        dataType: "json"
+      });
+       
+      request.done(function( request ) {
+        console.log(request);
+        if (request.success==true) {
+          // self.redirect to sigle recipe page
+          $("#recipe-response").html("Success.");
+          var new_url = "/recipe?id="+request.id;
+          window.location.href = new_url;
+
+        }
+
+        else {
+          $("#recipe-response").html("Sorry. Failed");
+        }
+
+      });
+       
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+
+    }
+
+    function runQueryOnYQL() {
+      var query = $("#ac-input").val();
+      var root = "http://developer.yahoo.com/yql/console/#h=";
+      var url = root+encodeURIComponent(query);
+      window.open(url,'_blank');
+      return;
+
+    }
+
+    $(document).ready(function() {
+      $("#search-submit").click(postToYQL);
+      $("#move-to-build-recipe").click(scrollToForm);
+      $("#ac-input").expandable();
+      $("#create-recipe").click(saveRecipe);
+      $("#back-to-top").click(scrollToTop);
+      $("#to-yql").click(runQueryOnYQL);
+    })
+
+  </script>
+</head>
+<body>
+  <div class="content">
+    <div id="top" class="header">
+        <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal">
+            <!-- if user logs in, direct to console -->
+            {% if user %}
+            <a class="pure-menu-heading" href="/console3">Open Data on YQL</a>
+            {% else %}
+            <a class="pure-menu-heading" href="/">Open Data on YQL</a>
+            {% end %}
+            <ul style="float:right">
+                 <li><a href="/console3">Console</a></li>
+                 <li><a href="/recipe">Recipes</a></li>
+                 {% if user %}
+                 <li><a href="/auth/logout">Logout</a></li>
+                 {% else %}
+                 <li><a href="/auth/login?next=/console3">Sign Up/Login</a></li>
+                 {% end %}
+            </ul>
+        </div>
+    </div>
+    <div class="content"> 
+        <div id="assisted_query" class="pure-g-r" style="padding-top:100px;padding-bottom:100px; margin-left:40px;margin-right:40px">
+            <div class="pure-u-1">
+                <div class="l-box">
+                    <h1>Build Your Queries</h1>
+                    <div class="pure-form">
+                        <textarea class="pure-u-1" id="ac-input" rows="2"> </textarea>
+                        <br />
+                        <p>
+                        <button id="search-submit" type="submit" class="pure-button pure-button-primary">Check Response</button>
+                        <button id="move-to-build-recipe" type="submit" class="pure-button pure-button-primary">Save Query</button>   
+                        <button id="to-yql" class="pure-button pure-button-primary">Try Query on YQL Console</button>  
+                        </p>
+
+                    </div>
+                    <br />
+                    <h2>Your Query's Output</h2>
+                    <div id="tableHolder"></div>
+                    <!-- 
+                    <form class="pure-form">
+                      <h3>Output</h3>
+                      <textarea class="pure-u-1" id="json-ouput" rows="10"> </textarea>
+                    </form>
+                    -->
+                </div>
+            </div>
+        </div>
+        <!-- once satisfied with the query, can save and become social-->
+        <div id="save-recipe" class="pure-g-r content-ribbon" style="padding-top:50px;padding-bottom:100px">
+
+            <div class="pure-u-1">
+                <div class="l-box">
+                    <div class="pure-form pure-form-stacked">
+                        <button id="back-to-top" class="pure-button pure-button-secondary pure-button-xsmall" style="float:right">Back to Creating Your Query</button>
+                        <h1>Create Query Recipe</h1>
+                        <fieldset>
+                            <label class="create-recipe-label" for="title" style="font-size:26px">Title</label>
+                            <input class="pure-u-1" id="recipe-title" type="text" placeholder="Title">
+
+                            <br />
+                            <label class="create-recipe-label" for="description" style="font-size:26px">Description. <small style="font-size:14px">You can use hashtags to categorize your recipe. For example #iCulture</small></label>
+                            <textarea class="pure-u-1" id="recipe-description" type="text" rows="2" placeholder="Describe your receipe"></textarea>
+                            <button id="create-recipe" type="submit" class="pure-button pure-button-primary pure-button-super-xlarge">Create Query Recipe</button>
+                            {% module xsrf_form_html() %}
+                            <span id="recipe-response"></span>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+      Copyright.
+    </div>
+  </div>
+ 
+ 
+</body>
+</html>

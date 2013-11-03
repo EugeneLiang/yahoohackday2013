@@ -1,0 +1,1 @@
+USE "http://192.241.238.206/iculture_communities.xml" as iculture_communities; USE "http://192.241.238.206/iculture_scene.xml" as iculture_scene; SELECT * FROM iculture_communities WHERE ( Info.areaCode ) IN ( SELECT Info.areaCode FROM iculture_scene )

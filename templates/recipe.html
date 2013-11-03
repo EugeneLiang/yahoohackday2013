@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A layout example that shows off a responsive product landing page.">
+<title>Open Data on YQL</title>
+<link rel="stylesheet" href="/static/css/pure-min.css">
+<link rel="stylesheet" href="/static/css/marketing.css">
+<style>
+    #ac-input {
+      font-size: 24px;
+    } 
+
+    #recipe-title, #recipe-description {
+      font-size: 24px
+    }
+
+    .create-recipe-label {
+      font-size: 30px;
+      font-weight: 500;
+    }
+
+    #photos {
+      z-index:10000;
+      border: 1px solid #cfcfcf;
+      list-style: none;
+      margin: 1.5em 0 0;
+      padding: 6px;
+    }
+    #photos li {
+      display: inline-block;
+      list-style: none;
+      /* fake inline-block for IE<8 */
+      zoom: 1;
+      *display: inline;
+      z-index:10000;
+    }
+
+    #photos .empty { font-style: italic; }
+
+    #photos .photo {
+      margin: 5px;
+      text-align: center;
+      width: 100px;
+      z-index:10000;
+    }
+
+    #photos .photo img {
+      border: 1px solid #000;
+      vertical-align: top;
+      z-index:10000;
+    }
+
+    .result {
+      margin: 2px 0;
+      zoom: 1;
+      z-index:10000;
+    }
+
+    .result:after {
+      clear: both;
+      content: '.';
+      display: block;
+      height: 0;
+      visibility: hidden;
+      z-index:10000;
+    }
+
+    .result .photo {
+      height: 32px;
+      float: left;
+      margin-right: 6px;
+      width: 32px;
+      z-index:10000;
+    }
+
+    .result .title { vertical-align: top; z-index:10000; }
+
+    .social-data img {
+       height:20px;
+       width:20px;
+       vertical-align: middle;
+       z-index:10000;
+    }
+
+    .statistics {
+      font-size:10px;
+      z-index:10000;
+    }
+
+    .statistics:hover {
+      border:1px solid red;
+      z-index:10000;
+    }
+
+
+    /* overlay css */
+    /* Hide overlay markup while loading, if js is enabled */
+    .yui3-js-enabled .yui3-overlay-loading {
+        top: -1000em;
+        left: -1000em;
+        position: absolute;
+        z-index:10000;
+    }
+
+    .yui3-aclist, .yui3-aclist-item, .yui3-aclist-item-active, .yui3-aclist-list{
+        z-index:10000;
+        letter-spacing: 1px;
+    }
+    .yui3-aclist-item div {
+        z-index:10000;
+        letter-spacing: 1px;
+    }
+
+    .social-holder-attribute {
+      z-index: 10000;
+      width: 120%;
+      margin-left: -5px;
+      padding-left: 10px;
+      background-color: black;
+      color:white;
+      font-size:20px;
+      font-weight: bold;
+
+    }
+
+    .l-box {
+      margin-top: -40px;
+    }
+
+    .pure-menu-selected {
+      font-size: 16px;
+      margin-top: -10px;
+      margin-left: -30px;
+    }
+
+    .pure-button-xsmall {
+        font-size: 70%;
+    }
+
+    .pure-button-small {
+        font-size: 85%;
+    }
+
+    .pure-button-large {
+        font-size: 110%;
+    }
+
+    .pure-button-xlarge {
+        font-size: 125%;
+    }
+
+    .pure-button-super-xlarge {
+        font-size: 200%;
+    }
+
+    .pure-button-success,
+        .pure-button-error,
+        .pure-button-warning,
+        .pure-button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .pure-button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .pure-button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .pure-button-warning {
+            background: rgb(223, 117, 20); /* this is an orange */
+        }
+
+        .pure-button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
+    .icon {
+      height:64px;
+      width:64px;
+      margin: 4px;
+    }
+
+    .spaced {
+      margin-left:80px;
+
+    }
+
+    .ui-autocomplete {
+      max-height: 150px;
+      overflow-y: auto;
+      /* prevent horizontal scrollbar */
+      overflow-x: hidden;
+      /* add padding to account for vertical scrollbar */
+      padding-right: 20px;
+    } 
+
+    .banner {
+      height:100px;
+      background-color: #FFF;
+      color:#444;
+      padding:40px 0 0 70px;
+      font-size: 60px;
+    }
+
+</style>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="/static/js/jquery-1.9.1.min.js"></script>
+  <script src="/static/js/jquery-ui.min.js"></script>
+  <script src="/static/js/jquery.expandable.js"></script>
+</head>
+<body>
+  <div class="content">
+    <div class="header">
+        <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal">
+            <!-- if user logs in, direct to console -->
+            {% if user %}
+            <a class="pure-menu-heading" href="/console3">Open Data on YQL</a>
+            {% else %}
+            <a class="pure-menu-heading" href="/">Open Data on YQL</a>
+            {% end %}
+            <ul style="float:right">
+                 <li><a href="/console3">Console</a></li>
+                 <li><a href="/recipe">Recipes</a></li>
+                 {% if user %}
+                 <li><a href="/auth/logout">Logout</a></li>
+                 {% else %}
+                 <li><a href="/auth/login?next=/console3">Sign Up/Login</a></li>
+                 {% end %}
+            </ul>
+        </div>
+    </div>
+    <div class="content"> 
+        <div class="pure-g-r" style="padding-top:100px; margin-left:40px;margin-right:40px; height:800px">
+            <div class="pure-u-2-3">
+                <section class="post">
+                    <header class="post-header">
+                        <h2 class="post-title">{{recipe['title']}}</h2>
+                        <p class="post-meta">
+                            By <a href="http://facebook.com/{{recipe['owner']['id']}}" class="post-author">{{recipe['owner']['name']}}</a> under
+                            {% for t in recipe['tags'] %}
+                            <a class="pure-button pure-button-success pure-button-xsmall" href="#">{{t}}</a> 
+                            {% end %}
+                        </p>
+                    </header>
+                    <div class="post-description">
+                        <p>
+                            {{recipe['description']}}
+                        </p>
+                    </div>
+
+                    <div class="post-description">
+                        <h3>YQL Query</h3>
+                        <p>
+                             {{recipe['yql_statement']}}
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="pure-u-1-3">
+              <div class="pure-u">
+                <p><button class="pure-button pure-button-secondary">Save Recipe</button></p>
+                <p><a class="pure-button pure-button-secondary" href="http://developer.yahoo.com/yql/console/#h={{ url_escape(recipe['yql_statement'])}}" target="_blank">View query on YQL console</a></p>
+              </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+      Copyright.
+    </div>
+  </div>
+ 
+ 
+</body>
+</html>

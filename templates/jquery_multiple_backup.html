@@ -1,0 +1,95 @@
+<!doctype html>
+ 
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>jQuery UI Autocomplete - Multiple values</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  
+  <script>
+  $(function() {
+
+    function split( val ) {
+      return val.split( /\s\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#tags" )
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).data( "ui-autocomplete" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          /*
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+          */
+          var inp = $('#tags').val();
+          var encoded_inp = encodeURIComponent(inp);
+          $.getJSON( "/suggestions?query="+encoded_inp, {
+            term: extractLast( request.term )
+          }, response );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join(" ");
+          return false;
+        }
+      });
+    });
+
+    function postToYQL() {
+      var value = $("#tags").val();
+      var request = $.ajax({
+        url: "/yql",
+        type: "GET",
+        data: { query_string : value },
+        dataType: "json"
+      });
+       
+      request.done(function( request ) {
+        console.log(request);
+      });
+       
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+
+
+    }
+    $(document).ready(function() {
+      $("#send").click(postToYQL);
+    })
+
+  </script>
+</head>
+<body>
+<div class="ui-widget">
+  <label for="tags">Tag programming languages: </label>
+  <br />
+  <input id="tags" size="100" />
+  <button id="send">Send</button>
+</div>
+ 
+ 
+</body>
+</html>
