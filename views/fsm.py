@@ -307,7 +307,7 @@ def selectFSM(queryStr):
                 if(table_name=='gov_customerProtect'):
                     keywordList=['SELECT']
                     return getResultJson(putHintDict(hintdict,keywords,keywordList),queryStr)
-                if_MORE_TABLE=False
+                if_MORE_TABLE=True
                 for table in tables_result:
                     print table
                     tempTable =table.split('.xml')[0].replace('.xml','').replace(yqltableaddr,'').replace('"','')

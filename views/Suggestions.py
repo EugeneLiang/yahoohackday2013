@@ -17,7 +17,7 @@ from bson.json_util import dumps
 from views.Basehandler import BaseHandler
 
 import sys
-sys.path.append("/Users/mrjedi/Documents/projects/hack")
+#sys.path.append("/Users/mrjedi/Documents/projects/hack")
 from fsm import *
 yqltableaddr='http://192.241.238.206/'
 
